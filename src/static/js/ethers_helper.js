@@ -1298,6 +1298,7 @@ async function getRibbonVault(app, vault, address, stakingAddress) {
   const [ decimals, underlying, name, symbol, totalSupply, staked, unstaked, balance] =
     await app.ethcallProvider.all(calls);
   const token = await getToken(app, underlying, address);
+  token.name = token.symbol;
   return {
     address,
     name,
