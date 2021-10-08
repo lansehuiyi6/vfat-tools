@@ -1291,6 +1291,28 @@ async function getVault(app, vault, address, stakingAddress) {
   }
 }
 
+async function getRibbonVault(app, vault, address, stakingAddress) {
+  const calls = [vault.decimals(), vault.underlying(), vault.name(), vault.symbol(),
+    vault.totalSupply(), vault.balanceOf(stakingAddress), vault.balanceOf(app.YOUR_ADDRESS),
+    vault.assetBalance()];
+  const [ decimals, underlying, name, symbol, totalSupply, staked, unstaked, balance] =
+    await app.ethcallProvider.all(calls);
+  const token = await getToken(app, underlying, address);
+  return {
+    address,
+    name,
+    symbol,
+    totalSupply,
+    decimals,
+    staked: staked / 10 ** decimals,
+    unstaked: unstaked / 10 ** decimals,
+    token: token,
+    balance,
+    contract: vault,
+    tokens : token.tokens
+  }
+}
+
 async function getCToken(app, cToken, address, stakingAddress) {
   const calls = [cToken.decimals(), cToken.underlying(), cToken.totalSupply(),
     cToken.name(), cToken.symbol(), cToken.balanceOf(stakingAddress),
@@ -1354,6 +1376,9 @@ async function getStoredToken(app, tokenAddress, stakingAddress, type) {
     case "gelato":
       const gelato = new ethcall.Contract(tokenAddress, GELATO_ABI);
       return await getGelatoPool(app, gelato, tokenAddress, stakingAddress);
+    case "ribbonToken":
+      const ribbonToken = new ethcall.Contract(tokenAddress, RIBBON_ABI);
+      return await getRibbonVault(app, ribbonToken, tokenAddress, stakingAddress);
     case "vault":
       const vault = new ethcall.Contract(tokenAddress, HARVEST_VAULT_ABI);
       return await getVault(app, vault, tokenAddress, stakingAddress);
@@ -1449,6 +1474,15 @@ async function getToken(app, tokenAddress, stakingAddress) {
     const _token = await app.ethcallProvider.all([jar.token()]);
     const res = await getJar(app, jar, tokenAddress, stakingAddress);
     window.localStorage.setItem(tokenAddress, "jar");
+    return res;
+  }
+  catch(err) {
+  }
+  try {
+    const ribbonToken = new ethcall.Contract(tokenAddress, RIBBON_ABI);
+    const _token = await app.ethcallProvider.all([ribbonToken.underlying()]);
+    const res = await getRibbonVault(app, ribbonToken, tokenAddress, stakingAddress);
+    window.localStorage.setItem(tokenAddress, "ribbonToken");
     return res;
   }
   catch(err) {
