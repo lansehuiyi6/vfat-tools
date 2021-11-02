@@ -11,7 +11,7 @@ async function main() {
   _print(`Initialized ${App.YOUR_ADDRESS}\n`);
   _print("Reading smart contracts...\n");
 
-  const FINN_FARM_ADDR = "0x1f4b7660b6AdC3943b5038e3426B33c1c0e343E6";
+  const FINN_FARM_ADDR = "0xd45F54838dbfCe0F976bD430bE5f8678479E1510";
   const rewardTokenTicker = "FINN";
 
   const customURLs =
@@ -238,6 +238,7 @@ async function main() {
       }
     }
   }
+
   await loadMoonriverChefContract(App, tokens, prices, FINN_FARM, FINN_FARM_ADDR, FINN_FARM_ABI, rewardTokenTicker,
     "finn", null, rewardsPerWeek, "pendingReward");
 
