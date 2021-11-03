@@ -111,7 +111,7 @@ async function main() {
   function printChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolIndex, poolPrices,
     totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
     pendingRewardsFunction, fixedDecimals, claimFunction, chain = "eth", depositFee = 0, withdrawFee = 0) {
-    fixedDecimals = fixedDecimals ?? 2;
+    fixedDecimals = fixedDecimals ?? 6;
     const sp = (poolInfo.stakedToken == null) ? null : getPoolPrices(tokens, prices, poolInfo.stakedToken, chain);
     var poolRewardsPerWeek = poolInfo.allocPoints / totalAllocPoints * rewardsPerWeek;
     if (poolRewardsPerWeek == 0 && rewardsPerWeek != 0) return;
@@ -242,7 +242,7 @@ async function main() {
   function printChefContractLinks(App, chefAbi, chefAddr, poolIndex, poolAddress, pendingRewardsFunction,
     rewardTokenTicker, stakeTokenTicker, unstaked, userStaked, pendingRewardTokens, fixedDecimals,
     claimFunction, rewardTokenPrice, chain, depositFee, withdrawFee) {
-  fixedDecimals = fixedDecimals ?? 2;
+  fixedDecimals = fixedDecimals ?? 6;
   const approveAndStake = async function() {
     return chefContract_stake(chefAbi, chefAddr, poolIndex, poolAddress, App)
   }
